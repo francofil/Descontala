@@ -41,6 +41,7 @@ Contraseña de todos: **`Demo1234!`**
 
 ```bash
 pnpm test:db   # pgTAP: canje (doble canje, caducado, otra cadena, límite), clientes nuevos y RLS
+pnpm test      # Vitest: formato/precios + integración de canje concurrente (necesita Supabase local)
 ```
 
 ## Estructura
