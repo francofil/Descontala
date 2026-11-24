@@ -54,7 +54,7 @@ async function List({ searchParams }: Pick<PageProps<"/panel/promos">, "searchPa
       <SavedToast show={typeof guardada === "string"} />
       <ul className="grid gap-3">
         {promos.map((p) => (
-          <li key={p.id} className={cn("flex items-center gap-4 rounded-2xl border bg-hoja p-4", p.state === "ended" && "opacity-70")}>
+          <li key={p.id} className={cn("relative flex items-center gap-4 rounded-2xl border bg-hoja p-4", p.state === "ended" && "opacity-70")}>
             <DiscountTag discount={p.discount} size="sm" className="hidden shrink-0 sm:inline-flex" />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
@@ -63,7 +63,7 @@ async function List({ searchParams }: Pick<PageProps<"/panel/promos">, "searchPa
                   {typeof p.when === "string" ? p.when : p.when.text}
                 </span>
               </div>
-              <p className="mt-1 truncate font-semibold">{p.title}</p>
+              <Link href={`/panel/promos/${p.id}`} className="mt-1 block truncate font-semibold after:absolute after:inset-0 hover:underline">{p.title}</Link>
               <p className="text-sm text-muted-foreground">{p.storesLabel}</p>
             </div>
             <dl className="hidden shrink-0 grid-cols-3 gap-5 text-right md:grid">
@@ -75,7 +75,9 @@ async function List({ searchParams }: Pick<PageProps<"/panel/promos">, "searchPa
               <p className="font-display text-xl font-bold tabular">{p.redemptions}</p>
               <p className="text-xs text-muted-foreground">canjes</p>
             </div>
-            <PromoRowActions id={p.id} state={p.state} />
+            <div className="relative z-10">
+              <PromoRowActions id={p.id} state={p.state} />
+            </div>
           </li>
         ))}
       </ul>
@@ -86,7 +88,7 @@ async function List({ searchParams }: Pick<PageProps<"/panel/promos">, "searchPa
 function Stat({ label, value, strong }: { label: string; value: number; strong?: boolean }) {
   return (
     <div>
-      <dd className={cn("font-display text-xl font-bold tabular", strong && "text-[#2f7d55] dark:text-[#5fbf8a]")}>{value}</dd>
+      <dd className={cn("font-display text-xl font-bold tabular", strong && "text-bien")}>{value}</dd>
       <dt className="text-xs text-muted-foreground">{label}</dt>
     </div>
   );

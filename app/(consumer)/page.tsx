@@ -4,6 +4,8 @@ import { LocationSync } from "@/components/consumer/location-sync";
 import { PromoExplorer } from "@/components/promo/promo-explorer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getNearbyPromotions } from "@/lib/services/promotions";
+import { getPreShoppingBlock } from "@/lib/services/alerts";
+import { PreShoppingBlock } from "@/components/consumer/pre-shopping";
 
 export default function HomePage() {
   return (
@@ -21,11 +23,13 @@ export default function HomePage() {
 
 async function Explorer() {
   const { promos, categories, location } = await getNearbyPromotions();
+  const preShopping = await getPreShoppingBlock(promos);
   return (
     <>
       <div className="-mt-3">
         <LocationSync precise={location.precise} />
       </div>
+      {preShopping ? <PreShoppingBlock block={preShopping} /> : null}
       <PromoExplorer promos={promos} categories={categories} center={location} />
     </>
   );

@@ -19,6 +19,10 @@
   --salvia: #6b746d;
   --linea: #e4e4de;
   --hoja: #ffffff;
+  /* Series del gráfico (validadas: daltonismo y contraste en claro/oscuro). */
+  --serie-nuevos: #b5800f;
+  --serie-repiten: #4a67a8;
+  --bien: #2f7d55;
 
   --background: var(--papel);
   --foreground: var(--tinta);
@@ -55,6 +59,9 @@
     --salvia: #9aa39b;
     --linea: #262d28;
     --hoja: #1a201c;
+    --serie-nuevos: #c08a14;
+    --serie-repiten: #5f82d9;
+    --bien: #5fbf8a;
 
     --secondary: #232a25;
     --muted: #232a25;
@@ -96,6 +103,9 @@
   --color-almagra: var(--almagra);
   --color-salvia: var(--salvia);
   --color-hoja: var(--hoja);
+  --color-serie-nuevos: var(--serie-nuevos);
+  --color-serie-repiten: var(--serie-repiten);
+  --color-bien: var(--bien);
 
   --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), var(--font-instrument), ui-sans-serif, sans-serif;

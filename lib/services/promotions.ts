@@ -34,6 +34,8 @@ export type PromoCardData = {
   ends: EndsLabel;
   endsAt: string;
   productName: string | null;
+  productId: string | null;
+  categoryId: string | null;
   chain: { id: string; name: string; color: string };
   category: { slug: string; name: string; emoji: string } | null;
   store: { id: string; name: string; neighborhood: string | null; lat: number; lng: number };
@@ -59,6 +61,8 @@ export async function getNearbyPromotions() {
     ends: endsLabel(r.ends_at, now),
     endsAt: r.ends_at,
     productName: r.product_name,
+    productId: r.product_id,
+    categoryId: r.category_id,
     chain: { id: r.chain_id, name: r.chain_name, color: r.chain_color },
     category: r.category_slug ? { slug: r.category_slug, name: r.category_name, emoji: r.category_emoji } : null,
     store: { id: r.store_id, name: r.store_name, neighborhood: r.store_neighborhood, lat: r.store_lat, lng: r.store_lng },
