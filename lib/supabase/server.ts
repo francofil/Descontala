@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { publicEnv } from "@/lib/env";
 import type { Database } from "./database.types";
@@ -8,6 +9,8 @@ export type DbClient = Awaited<ReturnType<typeof createClient>>;
 
 /** Cliente con la sesión del usuario: todas las consultas pasan por RLS. */
 export async function createClient() {
+  // Supabase valida tokens con la hora actual: siempre en tiempo de petición.
+  await connection();
   const cookieStore = await cookies();
   return createServerClient<Database>(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,

@@ -1,41 +1,44 @@
-import Link from "next/link";
 import { Suspense } from "react";
-import { Logo } from "@/components/brand/logo";
-import { LogoutButton } from "@/components/auth/logout-button";
+import { ConsumerHeader } from "@/components/consumer/consumer-header";
+import { LocationSync } from "@/components/consumer/location-sync";
+import { PromoExplorer } from "@/components/promo/promo-explorer";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCurrentUser } from "@/lib/services/session";
+import { getNearbyPromotions } from "@/lib/services/promotions";
 
-// Fase 1: inicio provisional. En la Fase 2 aquí van las promos cercanas.
 export default function HomePage() {
   return (
-    <main className="mx-auto w-full max-w-md flex-1 px-5 pt-8">
-      <header className="flex items-center justify-between">
-        <Logo />
-        <Suspense fallback={<Skeleton className="h-8 w-20" />}>
-          <SessionArea />
+    <>
+      <ConsumerHeader />
+      <section className="mt-6 grid gap-5">
+        <h1 className="text-[2rem] leading-tight font-bold">Ofertas cerca de ti</h1>
+        <Suspense fallback={<ExplorerSkeleton />}>
+          <Explorer />
         </Suspense>
-      </header>
-      <section className="mt-12 grid gap-2">
-        <h1 className="text-3xl font-bold">Ofertas cerca de ti</h1>
-        <p className="text-muted-foreground">Fase 1 lista: sesión y roles funcionando. Las promos llegan en la Fase 2.</p>
       </section>
-    </main>
+    </>
   );
 }
 
-async function SessionArea() {
-  const user = await getCurrentUser();
-  if (!user) {
-    return (
-      <Link href="/login" className="text-sm font-medium underline underline-offset-4">
-        Entrar
-      </Link>
-    );
-  }
+async function Explorer() {
+  const { promos, categories, location } = await getNearbyPromotions();
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-sm text-muted-foreground">Hola, {user.displayName}</span>
-      <LogoutButton />
+    <>
+      <div className="-mt-3">
+        <LocationSync precise={location.precise} />
+      </div>
+      <PromoExplorer promos={promos} categories={categories} center={location} />
+    </>
+  );
+}
+
+function ExplorerSkeleton() {
+  return (
+    <div className="grid gap-4">
+      <Skeleton className="h-4 w-40" />
+      <div className="flex gap-2">
+        {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-9 w-24 shrink-0 rounded-full" />)}
+      </div>
+      {[0, 1, 2].map((i) => <Skeleton key={i} className="h-44 rounded-2xl" />)}
     </div>
   );
 }

@@ -11,7 +11,8 @@
     "db:start": "supabase start -x vector,logflare,imgproxy,edge-runtime",
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types typescript --local --schema public > lib/supabase/database.types.ts",
-    "test:db": "supabase test db"
+    "test:db": "supabase test db",
+    "test": "vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

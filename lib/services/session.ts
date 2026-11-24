@@ -1,7 +1,6 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { findProfileById } from "@/lib/repositories/profiles";
 import { homeForRole, type Role } from "@/lib/roles";
@@ -17,8 +16,6 @@ export type CurrentUser = {
 
 /** Usuario actual (o null). Memoizado por petición. */
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
-  // La validación del JWT usa la hora actual: siempre en tiempo de petición.
-  await connection();
   const db = await createClient();
   const { data } = await db.auth.getClaims();
   const claims = data?.claims;

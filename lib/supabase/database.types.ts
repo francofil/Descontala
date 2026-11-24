@@ -399,6 +399,9 @@ isOneToOne: false
 "check_rate_limit":
 { Args: { "p_key": string,"p_limit": number,"p_window_seconds": number }; Returns: boolean
                            },
+"distance_km":
+{ Args: { "lat1": number,"lat2": number,"lng1": number,"lng2": number }; Returns: number
+                           },
 "generate_code":
 { Args: { "p_promotion_id": string }; Returns: {
               "chain_id": string,
@@ -422,6 +425,11 @@ isOneToOne: false
 "is_admin":
 { Args: Record<PropertyKey, never>; Returns: boolean
                            },
+"nearby_promotions":
+{ Args: { "p_lat": number,"p_lng": number,"p_radius_km"?: number }; Returns: {
+              "category_emoji": string,"category_id": string,"category_name": string,"category_slug": string,"chain_color": string,"chain_id": string,"chain_name": string,"conditions": string,"description": string,"distance_km": number,"ends_at": string,"id": string,"product_id": string,"product_name": string,"starts_at": string,"store_count": number,"store_id": string,"store_lat": number,"store_lng": number,"store_name": string,"store_neighborhood": string,"title": string,"type": Database["public"]['Enums']["promo_type"],"value": number
+            }[]
+                           },
 "normalize_code":
 { Args: { "p_code": string }; Returns: string
                            },
@@ -433,6 +441,14 @@ isOneToOne: false
                            },
 "redeem_code":
 { Args: { "p_code": string,"p_store_id": string }; Returns: Json
+                           },
+"search_product_prices":
+{ Args: { "p_lat": number,"p_lng": number,"p_query": string,"p_radius_km"?: number }; Returns: {
+              "brand": string,"chain_color": string,"chain_id": string,"chain_name": string,"distance_km": number,"price": number,"product_id": string,"product_name": string,"promotion_ends_at": string,"promotion_id": string,"promotion_title": string,"promotion_type": Database["public"]['Enums']["promo_type"],"promotion_value": number,"store_id": string,"store_name": string,"store_neighborhood": string,"unit": string,"updated_at": string
+            }[]
+                           },
+"search_text":
+{ Args: { "t": string }; Returns: string
                            },
 "track_event":
 { Args: { "p_promotion_id": string,"p_type": Database["public"]['Enums']["event_type"] }; Returns: undefined

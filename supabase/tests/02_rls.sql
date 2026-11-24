@@ -14,10 +14,12 @@ begin
   perform set_config('role', 'anon', true);
 end $$;
 
--- Fixture: un código del usuario de demo (como postgres).
+-- Fixture: un usuario de test propio (independiente del estado de la demo) con un código.
+insert into auth.users (instance_id, id, aud, role, email) values
+  ('00000000-0000-0000-0000-000000000000', 'f0000000-0000-0000-0000-000000000009', 'authenticated', 'authenticated', 'rls@test.local');
 insert into public.redemption_codes (code, promotion_id, chain_id, user_id, expires_at)
 values ('RLSTEST2', 'e0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001',
-        'a0000000-0000-0000-0000-000000000001', now() + interval '1 day');
+        'f0000000-0000-0000-0000-000000000009', now() + interval '1 day');
 
 -- ── Anónimo ──
 select pg_temp.act_as_anon();
@@ -27,20 +29,20 @@ select is((select count(*) from public.redemption_codes), 0::bigint, 'anon no ve
 select is((select count(*) from public.promotion_events), 0::bigint, 'anon no ve eventos');
 
 -- ── Consumer ──
-select pg_temp.act_as('a0000000-0000-0000-0000-000000000001');
-select is((select count(*) from public.redemption_codes where user_id <> 'a0000000-0000-0000-0000-000000000001'), 0::bigint,
+select pg_temp.act_as('f0000000-0000-0000-0000-000000000009');
+select is((select count(*) from public.redemption_codes where user_id <> 'f0000000-0000-0000-0000-000000000009'), 0::bigint,
           'consumer solo ve sus códigos');
 select is((select count(*) from public.redemption_codes), 1::bigint, 'consumer ve su propio código');
 select throws_ok($$ insert into public.redemption_codes (code, promotion_id, chain_id, user_id, expires_at)
                     values ('HACKEO22', 'e0000000-0000-0000-0000-000000000001', 'c0000000-0000-0000-0000-000000000001',
-                            'a0000000-0000-0000-0000-000000000001', now() + interval '1 day') $$,
+                            'f0000000-0000-0000-0000-000000000009', now() + interval '1 day') $$,
                  '42501', null, 'consumer no puede crear códigos directamente');
-select throws_ok($$ update public.profiles set role = 'admin' where id = 'a0000000-0000-0000-0000-000000000001' $$,
+select throws_ok($$ update public.profiles set role = 'admin' where id = 'f0000000-0000-0000-0000-000000000009' $$,
                  '42501', null, 'consumer no puede cambiarse el rol');
 select throws_ok($$ insert into public.promotions (chain_id, title, type, value, ends_at)
                     values ('c0000000-0000-0000-0000-000000000001', 'Promo falsa', 'porcentaje', 50, now() + interval '1 day') $$,
                  '42501', null, 'consumer no puede crear promos');
-select is((select count(*) from public.alert_preferences where user_id <> 'a0000000-0000-0000-0000-000000000001'), 0::bigint,
+select is((select count(*) from public.alert_preferences where user_id <> 'f0000000-0000-0000-0000-000000000009'), 0::bigint,
           'consumer solo ve sus avisos');
 
 -- ── Merchant cadena 1 ──
